@@ -1,0 +1,74 @@
+.Reserved{
+    text-decoration: line-through;
+}
+.Unreserved{
+    text-decoration: none;
+}
+
+#wishes{
+    padding-top: 20px;
+    padding-left: 60px;
+    margin-left: 150px;
+    margin-top: -20px;
+
+    width: 600px;
+    display: inline-block;
+    word-wrap: break-word
+}
+
+#wishlist{
+    background-color: lightyellow;
+    border-width: 1px;
+    border-color: grey;
+    border-style: solid;
+}
+
+h1, h2{
+    text-align: center;
+}
+
+#interests{
+    width:300px;
+    margin-left: 50px;
+
+    display: inline-block;
+    float: left;
+}
+
+#interestDiv{
+    width: 300px;
+    border-width: 1px;
+    border-color: grey;
+    border-style: solid;
+
+    background-color: lightyellow;
+}
+
+#wish, #link, #addWish{
+    display:inline-block;
+    
+}
+
+#wishForm{
+    display:grid;
+    grid-template-columns: auto auto auto;
+}
+
+#headers{
+    display:grid;
+    grid-template-columns: 200px 140px auto;
+    text-indent: 75px;
+}
+#link{
+    position: fixed;
+    margin-left: 235px;
+    text-align: center;
+}
+
+#reservation{
+    position: fixed;
+    margin-left: 380px;
+    text-align: center;
+}
+
+

@@ -1,0 +1,15 @@
+<header></header>
+
+
+<div id="wishmakerDiv">
+    <p>Fødselar navn</p>
+    <ul *ngFor="let maker of wishmakers">
+        <li>{{maker.Name}}</li>
+       <div>
+        <form #form (ngSubmit)="submit(maker.Name, password.value)">
+            <input autocomplete="off" name="password" #password placeHolder="Kodeord">
+            <button>Gå til ønskelisten</button>
+        </form>
+       </div>
+    </ul>
+</div>

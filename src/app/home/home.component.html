@@ -1,0 +1,65 @@
+<head>
+   <script src="https://smtpjs.com/v3/smtp.js"></script>  
+   <script src="home.component.ts"></script>
+</head>
+
+<header></header>
+
+<h1>Velkommen til {{wishmaker}}s ønskeliste</h1>
+
+<div id="bodyDiv">
+   
+   <div id="wishes">
+      <h2>{{wishmaker}}s ønsker</h2>
+      <div id="wishlist">
+         <div *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()">
+            <form #form (ngSubmit)="addWish(wishes.value, linkies.value)">
+                  <input autocomplete="off" name="wish" [value]="wish" #wishes placeholder="Hvilket ønske skal tilføjes?">
+                  <input autocomplete="off" name="link" [value]="link" #linkies placeholder="Er der et link til ønsket?">  
+                  <button>Tilføj ønske</button>         
+            </form>
+         </div>
+         <div id="headers">
+            <div><b>Ønske</b></div>
+            <div><b>Link</b></div>
+            <div><b>Reservation</b></div>
+         </div>
+         <div>
+            <ul *ngFor="let wish of wishList">
+               <form id="wishForm">
+                  <li id="wish" [ngClass]="(!this.auth.isLoggedIn() && wish[1]) ? 'Reserved': 'Unreserved'" >
+                     {{wish[3]}}
+                  </li>
+                  <div id="link">
+                     <a href="{{wish[0]}}" target="blank">Link</a>
+                  </div>
+                  <div id="reservation">
+                        <button *ngIf="!this.auth.isLoggedIn() || this.auth.adminLoggedIn()" (click)="reserved(wish)">Reserver</button>
+                        <button *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()" (click)="delete(wish)">Slet</button> 
+                  </div>
+                  
+               </form>
+            </ul>
+         </div>
+         <div *ngIf="!this.auth.isLoggedIn()">
+            <a [routerLink]="['/chat', guest, wishmaker]">Chat</a> 
+         </div>
+      </div>
+      <div>
+         <input autocomplete="off" [value]="email" #mail placeholder="Hvad er din email?"><button (click)="sendMail(mail.value)">Send ønskelisten til mail</button>
+      </div>
+   </div>
+   
+   <div id="interests">
+      <h2>{{wishmaker}}s interesser</h2>
+      <div id="interestDiv">
+         <form  *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()" #form (ngSubmit)="interests(interesting.value)">
+            <input autocomplete="off" [value]="interest" name="interest" #interesting placeholder="Tilføj en interesse til listen">
+            <button>Tilføj</button>
+         </form>
+         <ul *ngFor="let interest of interestsList">
+             <li>{{interest}}</li>
+         </ul>
+      </div>
+   </div>   
+</div>

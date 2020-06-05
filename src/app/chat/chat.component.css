@@ -1,0 +1,44 @@
+
+
+#message{
+    border-width: 2px;
+    border-color: lightgrey;
+    border-radius: 25px;
+    text-indent: 20px;
+
+    background-color: lightgrey;
+    width: 800px;
+    word-wrap: break-word;
+}
+
+#messageInput{
+    width: 50%;
+    height: 30px;
+}
+
+#messageDiv{
+    margin-left: 25%
+};
+
+#send{
+    width: 60px;
+    height: 38px;
+}
+
+
+
+.messageHistory{
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-top: 70px;
+
+    border-width: 2px;
+    border-color: lightgrey;
+    border-style: solid;
+
+    background-color: white;
+}
+
+#bodyDiv{
+    text-align: center;
+}

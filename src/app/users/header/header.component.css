@@ -1,0 +1,17 @@
+#header{
+    height: 50px;
+    background-color: black;
+    opacity: 0.5;
+    display:grid;
+    grid-template-columns: 150px auto 100px;
+}
+
+.link{
+    color: white;
+}
+
+#logout{
+    height: 30px;
+    width: 80px;
+}
+

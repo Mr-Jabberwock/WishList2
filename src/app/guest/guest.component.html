@@ -1,0 +1,15 @@
+<form>
+    <div>
+        <div id="nameDiv">
+            <h1>Velkommen til gæste login</h1>
+            <form #form="ngForm" (ngSubmit)="add(guest.value)">
+                <div class="form-group">
+                    <input autocomplete="off" required ngModel name="guest" #guest #guest="ngModel" placeholder="Hvad er dit navn?">
+                    <div class="alert alert-danger" *ngIf="guest.touched && !guest.valid">Det er påkrævet at du givet et navn</div>
+                    <button id="submit" [disabled]="!form.valid">Gå til ønskelisterne</button>
+                </div>
+                <h4>Er du her for at lave eller redigere en ønskeliste? <a href="/login">Login</a></h4>
+            </form>    
+        </div>
+    </div>
+</form>

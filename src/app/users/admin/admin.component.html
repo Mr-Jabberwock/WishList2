@@ -1,0 +1,26 @@
+<header></header>
+<div id="newUser">
+    <div id="nameDiv">
+        <label for="Name">Fødselar navn</label>
+        <input autocomplete="off" [value]="name" #Name name="Name" placeholder="Fødselarens navn">
+    </div>
+    <div id="passDiv">
+        <label for="Password">Hvad skal deres password være?</label>
+        <input autocomplete="off" [value]="pass" #Password name="Password" placeholder="Fødselerens password">
+    </div>
+    <div id="guestPassDiv">
+        <label for="GuestPassword">Hvad skal passwordet for at se deres ønskeliste være?</label>
+        <input autocomplete="off" [value]="guestPass" #GuestPassword name="GuestPassword" placeholder="Gæsternes uddelte password">
+    </div>
+    <div id="emailDiv">
+        <label for="Email">Fødselarens email</label>
+        <input autocomplete="off" [value]="email" #Email name="Email" placeholder="Fødselarens Email">
+    </div>
+    <div class="checkbox">
+        <label>
+            <input autocomplete="off" type="checkbox" #AdminCheck name="AdminCheck" [(ngModel)]="admin" (change)="checked(admin? true:false)"> Skal denne bruger have administrator rettigheder?
+        </label>
+    </div>
+    <button (click)="createUser(Name.value, Password.value, GuestPassword.value, Email.value)">Opret fødselar og send invitation</button>
+</div>
+    

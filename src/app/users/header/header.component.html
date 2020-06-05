@@ -1,0 +1,15 @@
+
+<diV id="header">
+    <div *ngIf="this.auth.adminLoggedIn()">
+        <a id="admin" class="link" href="/admin">Opret fødselar</a>
+    </div>
+    <div *ngIf="this.auth.adminLoggedIn()">
+        <a id="wishmakers" class="link" href="wishmakers/Steven/{{adminName}}">Fødselar liste</a>
+    </div>
+    <div>
+        <button id="logout"><a href="/guest">Logout</a></button>
+    </div>
+</diV>
+
+
+

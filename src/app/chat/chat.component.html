@@ -1,0 +1,20 @@
+<header ></header>
+
+
+
+<div id="bodyDiv">
+    <h1>Velkommen til {{wishmaker}}s ønske chat</h1>
+    <h3>Her kan man diskutere punkterne på ønskelisten. Skriv en besked, eller læs hvad de andre siger</h3>
+</div>
+    <div class="messageHistory">
+        <ul *ngFor="let message of messages$ | async">
+            <div id="message">
+                <b>{{message.Name}}</b>
+                <p>{{message.Message}}</p>
+            </div>
+        </ul>
+        <div id="messageDiv">
+        <textarea autocomplete="off" [value]="message" id="messageInput" #newMessage placeholder="Noget at tilføje? Skriv en besked"></textarea>
+        <button id="send" (click)="send(newMessage.value)">Send</button>
+        </div>
+    </div>  

@@ -1,0 +1,8 @@
+<div id="loginDiv">
+    <h1>Velkommen til bruger login</h1>
+    <form #f="ngForm" (ngSubmit)="signIn(f.value)" action="/admin">
+        <input autocomplete="off" #name name="Name" ngModel class="form-control" placeholder="Navn">
+        <input autocomplete="off" #password name="Password" ngModel class="form-control"placeholder="Kodeord">
+        <button type="submit">Login</button>
+    </form>
+</div>

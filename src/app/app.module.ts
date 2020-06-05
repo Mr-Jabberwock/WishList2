@@ -41,7 +41,6 @@ import { JwtModule } from '@auth0/angular-jwt';
     AppRoutingModule,
     RouterModule.forRoot([
       {path: 'guest', component: GuestComponent},
-      {path: "/", component: GuestComponent},
       {path: 'wishmakers/:guest/:wishmaker', component: HomeComponent}, //, , canActivate: [GuestGuard, AccessGuard]
       {path: 'Users/:wishmaker', component: HomeComponent},//, canActivate: [UserGuard, AccessGuard]
       {path: 'wishmakers/:guest', component: WishmakerComponent},

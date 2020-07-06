@@ -28,7 +28,7 @@ export class WishmakerComponent implements OnInit, OnDestroy{
         private route: ActivatedRoute, 
         private router: Router, 
         private access: AccessGuard,
-        private auth: AuthService,
+        public auth: AuthService,
         private db: AngularFireDatabase){}
 
     Password: String = "";

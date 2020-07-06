@@ -41,11 +41,11 @@ import { JwtModule } from '@auth0/angular-jwt';
     AppRoutingModule,
     RouterModule.forRoot([
       {path: 'guest', component: GuestComponent},
-      {path: 'wishmakers/:guest/:wishmaker', component: HomeComponent}, //, , canActivate: [GuestGuard, AccessGuard]
-      {path: 'Users/:wishmaker', component: HomeComponent},//, canActivate: [UserGuard, AccessGuard]
+      {path: 'wishmakers/:guest/:wishmaker', component: HomeComponent, canActivate: [GuestGuard, AccessGuard]}, //, 
+      {path: 'Users/:wishmaker', component: HomeComponent, canActivate: [UserGuard, AccessGuard]},
       {path: 'wishmakers/:guest', component: WishmakerComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'admin', component: AdminComponent, canActivate: [AuthGuard]}, //, 
+      {path: 'admin', component: AdminComponent, canActivate: [AuthGuard]}, 
       {path: 'chat/:guest/:wishmaker', component: ChatComponent}
     ]),
     AngularFireModule.initializeApp(environment.firebase),

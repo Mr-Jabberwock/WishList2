@@ -33,7 +33,7 @@
                <form class="wishForm">
 
                <div id="nameNdescription">
-                  <div *ngIf="this.auth.adminLoggedIn() || this.auth.isLoggedIn()" id="wishName" (click)="editText('', wish)">
+                  <div *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()" id="wishName" (click)="editText('', wish)">
                      <div *ngIf="this.viewMode == false || this.currentWish != '' && this.currentWish != wish[4]">
                         <li id="wish" [ngClass]="(!this.auth.isLoggedIn() && wish[2]) ? 'Reserved': 'Unreserved'" >
                            {{wish[4]}}
@@ -44,11 +44,10 @@
                      </div>
                   </div>
 
-                  <div id="wishName" *ngIf="!this.auth.adminLoggedIn() || !this.auth.isLoggedIn()">
+                  <div id="wishName" *ngIf="!this.auth.adminLoggedIn() && !this.auth.isLoggedIn() ">
                      <li id="wish" [ngClass]="(!this.auth.isLoggedIn() && wish[2]) ? 'Reserved': 'Unreserved'" >
                         {{wish[4]}}
                      </li>
-     
                   </div>
 
                   <div id="descriptionButton"><span 
@@ -58,16 +57,16 @@
                      (click)="showDescription(wish)"></span>
                   </div>
 
-                  <div *ngIf="this.auth.adminLoggedIn() || this.auth.isLoggedIn()">
+                  <div *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()">
                      <div (click)="viewDescriptionField(wish)" *ngIf="this.descriptionViewMode && !this.desTxtVM  && this.currentDescription == wish[4]">
                         <p id="description">{{wish[0]}}</p>
                      </div>
-                     <div *ngIf="this.auth.adminLoggedIn() && this.descriptionViewMode && this.desTxtVM && this.currentDescription == wish[4]">
+                     <div *ngIf="this.descriptionViewMode && this.desTxtVM && this.currentDescription == wish[4]">
                         <textarea (keyup.enter)="editDescription(description.value, wish)" #description value="{{wish[0]}}"></textarea>
                      </div>
                   </div>
 
-                  <div *ngIf="!this.auth.adminLoggedIn() || !this.auth.isLoggedIn()">
+                  <div *ngIf="!this.auth.adminLoggedIn() && !this.auth.isLoggedIn()">
                      <div (keyup.enter)="viewDescriptionField(wish)" *ngIf="this.descriptionViewMode && !this.desTxtVM  && this.currentDescription == wish[4]">
                         <p id="description">{{wish[0]}}</p>
                      </div>

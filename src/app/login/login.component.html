@@ -3,6 +3,7 @@
     <form #f="ngForm" (ngSubmit)="signIn(f.value)" action="/admin">
         <input autocomplete="off" #name name="Name" ngModel class="form-control" placeholder="Navn">
         <input autocomplete="off" #password name="Password" ngModel class="form-control"placeholder="Kodeord">
+        <div *ngIf="this.Name != this.NameVal || this.Password != this.PassVal" class="alert lert-danger">Forekert password</div>
         <button type="submit">Login</button>
     </form>
 </div>

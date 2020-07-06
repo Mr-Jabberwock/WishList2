@@ -42,10 +42,10 @@ export class AdminComponent implements OnDestroy{
         this.subscription = this.mailService.sendWelcomMessage(Email, Name, Password)
         .subscribe(res=>{});
 
-        this.name = " ";
-        this.pass = " ";
-        this.guestPass = " ";
-        this.email = " ";
+        this.name = null;
+        this.pass = null;
+        this.guestPass = null;
+        this.email = null;
 
         alert("Brugeren er blevet oprettet")
     }

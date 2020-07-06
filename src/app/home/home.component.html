@@ -1,11 +1,14 @@
 <head>
    <script src="https://smtpjs.com/v3/smtp.js"></script>  
    <script src="home.component.ts"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <header></header>
 
-<h1>Velkommen til {{wishmaker}}s ønskeliste</h1>
+<h1>Velkommen til {{wishmaker}}'s ønskeliste</h1>
 
 <div id="bodyDiv">
    
@@ -14,8 +17,9 @@
       <div id="wishlist">
          <div *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()">
             <form #form (ngSubmit)="addWish(wishes.value, linkies.value)">
+                  
                   <input autocomplete="off" name="wish" [value]="wish" #wishes placeholder="Hvilket ønske skal tilføjes?">
-                  <input autocomplete="off" name="link" [value]="link" #linkies placeholder="Er der et link til ønsket?">  
+                  <input autocomplete="off" name="link" [value]="link" #linkies placeholder="Har ønsket et link?">  
                   <button>Tilføj ønske</button>         
             </form>
          </div>
@@ -26,23 +30,54 @@
          </div>
          <div>
             <ul *ngFor="let wish of wishList">
-               <form id="wishForm">
-                  <li id="wish" [ngClass]="(!this.auth.isLoggedIn() && wish[1]) ? 'Reserved': 'Unreserved'" >
-                     {{wish[3]}}
-                  </li>
-                  <div id="link">
-                     <a href="{{wish[0]}}" target="blank">Link</a>
+               <form class="wishForm">
+
+               <div id="nameNdescription">
+                  <div id="wishName" (click)="editText('', wish)">
+                     <div *ngIf="this.viewMode == false || this.currentWish != '' && this.currentWish != wish[4]">
+                        <li id="wish" [ngClass]="(!this.auth.isLoggedIn() && wish[2]) ? 'Reserved': 'Unreserved'" >
+                           {{wish[4]}}
+                        </li>
+                     </div>
+                     <div *ngIf="this.viewMode == true && this.currentWish == wish[4]" (keyup.enter)="editText(editField.value, wish)">
+                        <input autocomplete="off" name="editField" value="{{wish[4]}}" #editField>
+                     </div>
                   </div>
-                  <div id="reservation">
-                        <button *ngIf="!this.auth.isLoggedIn() || this.auth.adminLoggedIn()" (click)="reserved(wish)">Reserver</button>
-                        <button *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()" (click)="delete(wish)">Slet</button> 
+
+                  <div id="descriptionButton"><span 
+                     class="glyphicon"
+                     [class.glyphicon-plus]="!this.descriptionViewMode || this.currentDescription != '' && this.currentDescription != wish[4]"
+                     [class.glyphicon-minus]="this.descriptionViewMode && this.currentDescription == wish[4]"
+                     (click)="showDescription(wish)"></span>
+                  </div>
+
+                  <div>
+                     <div (click)="viewDescriptionField(wish)" *ngIf="this.descriptionViewMode && !this.desTxtVM  && this.currentDescription == wish[4]">
+                        <p id="description">{{wish[0]}}</p>
+                     </div>
+                     <div *ngIf="this.descriptionViewMode && this.desTxtVM && this.currentDescription == wish[4]">
+                        <textarea (keyup.enter)="editDescription(description.value, wish)" #description value="{{wish[0]}}"></textarea>
+                     </div>
+                  </div>
+
+                  <div *ngIf="wish[1] != 'no link'" id="link">
+                     <a href="{{wish[1]}}" target="blank">Link</a>
+                  </div>
+
+                  <div *ngIf="!this.auth.isLoggedIn() || this.auth.adminLoggedIn()" id="reservation">
+                        <button *ngIf="wish[3] == this.guest || wish[2] == false" (click)="reserved(wish)">Reserve</button>
+                  </div>
+
+                  <div id="deleteWish">
+                     <button *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()" (click)="deleteWish(wish)">Slet</button> 
                   </div>
                   
+               </div>
                </form>
             </ul>
          </div>
          <div *ngIf="!this.auth.isLoggedIn()">
-            <a [routerLink]="['/chat', guest, wishmaker]">Chat</a> 
+            <a [routerLink]="['/chat', guest, wishmaker]">Chatten er aktiv. Deltag i den</a> 
          </div>
       </div>
       <div>

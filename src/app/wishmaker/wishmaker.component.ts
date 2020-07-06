@@ -31,6 +31,10 @@ export class WishmakerComponent implements OnInit, OnDestroy{
         private auth: AuthService,
         private db: AngularFireDatabase){}
 
+    Password: String = "";
+    PassVal: String = "";
+    Name: String = "";
+
     ngOnInit(){
         //udtræk gæste paramtren
         this.subscription = this.route.paramMap
@@ -56,18 +60,30 @@ export class WishmakerComponent implements OnInit, OnDestroy{
         this.wishmakers$ = this.db.object('Wishmaker').valueChanges()  
     }
 
-    ngOnDestroy(){
-        this.subscription.unsubscribe();
-    }
-    
     //verificer password
     submit(name: String, password: String){
+        this.Name = name;
+        this.Password = password;
         for(var i = 0; i < this.passarray.length; i++){
             if(this.passarray[i].Name == name && this.passarray[i].Password == password){
+                this.PassVal = this.passarray[i].Password;
                 this.access.setAccess(true);
                 this.router.navigate(["/wishmakers/" + this.guest + "/" + name])
             }
         }
     }
+
+    deleteUser(wishmaker){
+        console.log(wishmaker.Name);
+
+        this.subscription = this.service.deleteData("Wishmakers", wishmaker.Name).subscribe(res=>{});
+        this.service.deleteData("Users", wishmaker.Name).subscribe(res=>{});
+        this.service.deleteData("Chats", wishmaker.Name).subscribe(res=>{});
+    }
+
+    ngOnDestroy(){
+        this.subscription.unsubscribe();
+    }
+    
     
 }

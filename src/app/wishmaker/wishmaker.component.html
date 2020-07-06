@@ -9,6 +9,8 @@
         <form #form (ngSubmit)="submit(maker.Name, password.value)">
             <input autocomplete="off" name="password" #password placeHolder="Kodeord">
             <button>Gå til ønskelisten</button>
+            <button *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()" (click)="deleteUser(maker)">Slet fødselar</button>
+            <div *ngIf="this.Password != this.PassVal && this.Name == maker.Name">Forkert password</div>
         </form>
        </div>
     </ul>

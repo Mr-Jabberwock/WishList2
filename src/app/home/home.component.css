@@ -45,8 +45,12 @@ h1, h2{
 }
 
 #wish, #link, #addWish{
-    display:inline-block;
-    
+    display:inline-block;   
+}
+
+#wish, #description{
+    width: 200px;
+    word-wrap: break-word;
 }
 
 #wishForm{
@@ -56,19 +60,34 @@ h1, h2{
 
 #headers{
     display:grid;
-    grid-template-columns: 200px 140px auto;
-    text-indent: 75px;
+    grid-template-columns: 235px 145px auto;
+    text-indent: 40px;
 }
+
 #link{
-    position: fixed;
+    position: absolute;
     margin-left: 235px;
+    margin-top: -15px;
     text-align: center;
 }
 
 #reservation{
-    position: fixed;
+    position: absolute;
     margin-left: 380px;
+    margin-top: -15px;
     text-align: center;
+}
+
+#deleteWish{
+    position: absolute;
+    margin-left: 460px;
+    margin-top: -15px;
+    text-align: center;
+}
+
+#wishName{
+    display: inline-block;
+    float: left;
 }
 
 

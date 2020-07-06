@@ -24,14 +24,29 @@ export class LoginComponent implements OnDestroy{
         private admin: HeaderComponent){}
 
     subscription: Subscription;
+    Name = "";
+    NameVal = "";
+    Password = "";
+    PassVal = "";
 
 
     signIn(credentials){
+        this.Name = credentials.Name;
+        this.Password = credentials.Password;
         this.subscription = this.service.getData("Users/", credentials.Name)
         .subscribe(data =>{
-            if(credentials.Name == Object.values(data)[2] && 
+            console.log(data)
+            if(credentials.Name == Object.values(data)[2]){
+               this.NameVal = Object.values(data)[2];
+            }
+            if(credentials.Password == Object.values(data)[3]){
+                this.PassVal = Object.values(data)[3];
+            }
+
+            if(credentials.Name == Object.values(data)[2] &&
                credentials.Password == Object.values(data)[3]){
                 if(Object.values(data)[0] == true){
+                    console.log(this.Name, this.NameVal)
 
                     this.router.navigate(["/admin"])
                     this.auth.admin(Object.values(data)[2]);

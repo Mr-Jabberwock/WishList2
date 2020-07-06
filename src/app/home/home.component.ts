@@ -37,6 +37,12 @@ export class HomeComponent implements OnInit, OnDestroy{
     link:string = "";
     interest:string = "";
 
+    viewMode = false;
+    descriptionViewMode = false;
+    desTxtVM = false;
+    currentWish = "";
+    currentDescription = "";
+
     constructor(
         //private auth: AuthService, 
         private mail: EmailService,
@@ -88,49 +94,49 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     addWish(wish: String, link: String){
-        var url = "";
-        for(var i = 0; i < wish.length; i++){
-            if(wish[i] != "." && wish[i] != "/" && wish[i] != ":"){
-                url += wish[i]
-            }
+        if(link.substr(0,4) != "http"){
+            console.log(link.substr(0,3))
+            link = "no link";
         }
 
         var data = {
             Reserved: false,
             Reserver: "",
             Wish: wish,
-            Link: link
+            Link: link,
+            Description: "Beskrivelse"
         }
 
         this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish)
         .subscribe(res=>{})
 
-        this.wish = " ";
-        this.link = " ";
+        this.wish = null;
+        this.link = null;
         
     }
 
     reserved(wish){
-        console.log(wish)
-        if(wish[1] == false){
+        if(wish[2] == false){
             let data = {
                 Reserved: true,
                 Reserver: this.guest,
-                Wish: wish[3],
-                Link: wish[0]
+                Wish: wish[4],
+                Link: wish[1],
+                Description: wish[0]
             }
-            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[3])
+            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
             .subscribe(res=>{}) 
         }else{
-            if(wish[2] == this.guest){
+            if(wish[3] == this.guest){
                 let data = {
                     Reserved: false,
                     Reserver: "",
-                    Wish: wish[3],
-                    Link: wish[0]
+                    Wish: wish[4],
+                    Link: wish[1],
+                    Description: wish[0]
 
                 }
-                this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[3])
+                this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
                 .subscribe(res=>{}) 
             }else{
                 console.log("I'm afraid I cant let you do that, che")
@@ -140,9 +146,11 @@ export class HomeComponent implements OnInit, OnDestroy{
         
     }
 
-    delete(wish){
+    deleteWish(wish){
+        console.log("Wishmakers", this.wishmaker + "/" + 
+        this.newWish + "/Wishes/" + wish[4]);
         this.subscription = this.service.deleteData("Wishmakers", this.wishmaker + "/" + 
-        this.newWish + "/Wishes/" + wish[3])
+        this.newWish + "/Wishes/" + wish[4])
         .subscribe(res=>{});
 
     }
@@ -151,7 +159,7 @@ export class HomeComponent implements OnInit, OnDestroy{
         var interestO = {Interest: interest};
         this.subscription = this.service.setData(interestO, "Wishmakers/" + this.wishmaker, this.newWish+"/Interests/"+interest)
         .subscribe(res=>{}) 
-        this.interest = " ";
+        this.interest = null;
     }
 
     sendMail(email){
@@ -163,9 +171,62 @@ export class HomeComponent implements OnInit, OnDestroy{
         });
         this.mail.sendmail(email, wishlist, this.wishmaker)
         .subscribe(res=>{console.log(res)});
-        this.email = " ";
+        this.email = null;
 
         alert("Ønskelisten er blevet sendt til din email");
+    }
+
+    editText(newText, wish){
+        this.currentWish = wish[4];
+        console.log(this.currentWish);
+        if(this.viewMode == false){
+            this.viewMode = true
+        }else if (this.viewMode == true && newText != ""){
+            let data = {
+                Reserved: wish[2],
+                Reserver: this.guest,
+                Wish: newText,
+                Link: wish[1],
+                Description: wish[0]
+            }
+            console.log(wish);
+            this.deleteWish(wish);
+            this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+newText)
+            .subscribe(res=>{})
+
+            this.viewMode = false;
+
+        }
+    }
+
+    showDescription(wish){
+        this.currentDescription = wish[4];
+        this.descriptionViewMode = !this.descriptionViewMode;
+    }
+    viewDescriptionField(wish){
+       this.desTxtVM = !this.desTxtVM;
+    }
+
+    editDescription(newText, wish){
+        console.log(this.currentDescription)
+        if(this.desTxtVM == true){
+            
+            console.log(newText, wish);
+            let data = {
+                Reserved: wish[2],
+                Reserver: this.guest,
+                Wish: wish[4],
+                Link: wish[1],
+                Description: newText
+            }
+            console.log(newText);
+            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
+            .subscribe(res=>{})
+        }
+        
+        this.viewDescriptionField(wish);
+        //this.currentDescription = wish[4];
+        console.log(this.currentDescription)
     }
 
     ngOnDestroy(){

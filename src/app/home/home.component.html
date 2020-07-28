@@ -16,7 +16,7 @@
       <h2>{{wishmaker}}s ønsker</h2>
       <div id="wishlist">
          <div *ngIf="this.auth.isLoggedIn() || this.auth.adminLoggedIn()">
-            <form #form id="inputForm" (ngSubmit)="addWish(wishes.value, linkies.value)">
+            <form #form id="inputForm" (ngSubmit)="addWish(wishes.value, linkies.value, '')">
                   
                   <input autocomplete="off" name="wish" [value]="wish" #wishes placeholder="Hvilket ønske skal tilføjes?">
                   <input autocomplete="off" name="link" [value]="link" #linkies placeholder="Har ønsket et link?"> 

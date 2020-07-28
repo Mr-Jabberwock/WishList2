@@ -10,24 +10,25 @@ var urlencodedParser = bodyParser.urlencoded({extended: false});
 
 app.post("/sendmail", urlencodedParser, (req, res) => {
   console.log("request came");
+  console.log(req.body)
   let user = req.body;
-  console.log(user.wishlist)
   var wishlist = "Her er ønskelisten for " + user.wishmaker + "\n"
 
   for(var i= 0; i < user.wishlist.length; i++){
      wishlist += user.wishlist[i] + "\n";
   } 
+  console.log("this far 1")
 
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: "djohnsenspam@gmail.com",
-      pass: 'daniel33'
+      user: "wishlistinfomail@gmail.com",
+      pass: 'Daniel33'
     }
   });
   
   var mailOptions = {
-    from: "djohnsenspam@gmail.com",
+    from: "Wishlistinfomail@gmail.com",
     to: user.email,
     subject: user.wishmaker + "s ønskeliste",
     text: wishlist
@@ -41,6 +42,7 @@ app.post("/sendmail", urlencodedParser, (req, res) => {
       res.send(info);
     }
   });
+  console.log("this far 4")
 })
 
 app.post("/welcome", (req, res )=>{

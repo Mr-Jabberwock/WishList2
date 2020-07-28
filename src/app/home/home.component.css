@@ -11,7 +11,7 @@
     margin-left: 150px;
     margin-top: -20px;
 
-    width: 600px;
+    width: 800px;
     display: inline-block;
     word-wrap: break-word
 }
@@ -21,6 +21,10 @@
     border-width: 1px;
     border-color: grey;
     border-style: solid;
+}
+#inputForm{
+    display:grid;
+    grid-template-columns: auto auto auto auto;
 }
 
 h1, h2{
@@ -60,7 +64,7 @@ h1, h2{
 
 #headers{
     display:grid;
-    grid-template-columns: 235px 145px auto;
+    grid-template-columns: 235px 265px auto;
     text-indent: 40px;
 }
 
@@ -73,21 +77,32 @@ h1, h2{
 
 #reservation{
     position: absolute;
-    margin-left: 380px;
+    margin-left: 500px;
     margin-top: -15px;
     text-align: center;
 }
 
 #deleteWish{
     position: absolute;
-    margin-left: 460px;
+    margin-left: 575px;
+    margin-top: -15px;
+    text-align: center;
+}
+
+#editWish{
+    position: absolute;
+    margin-left: 625px;
     margin-top: -15px;
     text-align: center;
 }
 
 #wishName{
-    display: inline-block;
-    float: left;
+    width: 200px;
+   
+}
+#nameNplus{
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 

@@ -40,8 +40,10 @@ export class HomeComponent implements OnInit, OnDestroy{
     viewMode = false;
     descriptionViewMode = false;
     desTxtVM = false;
+    linkViewMode = false;
     currentWish = "";
     currentDescription = "";
+    currentLink = "";
 
     constructor(
         //private auth: AuthService, 
@@ -93,12 +95,13 @@ export class HomeComponent implements OnInit, OnDestroy{
 
     }
 
-    addWish(wish: String, link: String){
+    addWish(wish: String, link: String, image: String){
+        //this.storeImage(image);
+        var wishName = this.removeDots(wish);
         if(link.substr(0,4) != "http"){
-            console.log(link.substr(0,3))
             link = "no link";
         }
-
+        console.log("wishname" + wishName)
         var data = {
             Reserved: false,
             Reserver: "",
@@ -107,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy{
             Description: "Beskrivelse"
         }
 
-        this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish)
+        this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
         .subscribe(res=>{})
 
         this.wish = null;
@@ -116,6 +119,8 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     reserved(wish){
+        var wishName = this.removeDots(wish[4]);
+
         if(wish[2] == false){
             let data = {
                 Reserved: true,
@@ -124,7 +129,7 @@ export class HomeComponent implements OnInit, OnDestroy{
                 Link: wish[1],
                 Description: wish[0]
             }
-            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
+            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
             .subscribe(res=>{}) 
         }else{
             if(wish[3] == this.guest){
@@ -136,7 +141,7 @@ export class HomeComponent implements OnInit, OnDestroy{
                     Description: wish[0]
 
                 }
-                this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
+                this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
                 .subscribe(res=>{}) 
             }else{
                 console.log("I'm afraid I cant let you do that, che")
@@ -147,10 +152,13 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     deleteWish(wish){
+        var wishName = this.removeDots(wish[4]);
+        console.log(wishName)
         console.log("Wishmakers", this.wishmaker + "/" + 
-        this.newWish + "/Wishes/" + wish[4]);
+        this.newWish + "/Wishes/" + wishName)
+
         this.subscription = this.service.deleteData("Wishmakers", this.wishmaker + "/" + 
-        this.newWish + "/Wishes/" + wish[4])
+        this.newWish + "/Wishes/" + wishName)
         .subscribe(res=>{});
 
     }
@@ -165,20 +173,23 @@ export class HomeComponent implements OnInit, OnDestroy{
     sendMail(email){
         var wishlist = [];
         this.wishList.forEach(element => {
-            if(element[1] != true || element[2] == this.guest){
-               wishlist.push(element[3]);
+            //hvis reserved er falsk eller reserver er denne gæst
+            if(element[2] == false || element[3] == this.guest){
+               wishlist.push(element[4]);
             }
         });
         this.mail.sendmail(email, wishlist, this.wishmaker)
-        .subscribe(res=>{console.log(res)});
+        .subscribe(res=>{});
         this.email = null;
 
         alert("Ønskelisten er blevet sendt til din email");
     }
 
     editText(newText, wish){
+        
         this.currentWish = wish[4];
-        console.log(this.currentWish);
+        var wishName = this.removeDots(newText);
+
         if(this.viewMode == false){
             this.viewMode = true
         }else if (this.viewMode == true && newText != ""){
@@ -189,9 +200,9 @@ export class HomeComponent implements OnInit, OnDestroy{
                 Link: wish[1],
                 Description: wish[0]
             }
-            console.log(wish);
             this.deleteWish(wish);
-            this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+newText)
+            console.log("Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
+            this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
             .subscribe(res=>{})
 
             this.viewMode = false;
@@ -208,10 +219,8 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     editDescription(newText, wish){
-        console.log(this.currentDescription)
         if(this.desTxtVM == true){
             
-            console.log(newText, wish);
             let data = {
                 Reserved: wish[2],
                 Reserver: this.guest,
@@ -219,14 +228,35 @@ export class HomeComponent implements OnInit, OnDestroy{
                 Link: wish[1],
                 Description: newText
             }
-            console.log(newText);
             this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
             .subscribe(res=>{})
         }
         
         this.viewDescriptionField(wish);
         //this.currentDescription = wish[4];
-        console.log(this.currentDescription)
+    }
+
+    editLink(newLink, wish){
+        this.linkViewMode = !this.linkViewMode;
+    }
+
+    storeImage(file){
+        console.log(file);
+
+    }
+
+    removeDots(wish){
+        var wishName = "";
+
+        for(var i = 0; i < wish.length; i++){
+            if(wish.charAt(i) == "."){
+               wishName += "|"
+            }else{
+              wishName += wish.charAt(i);
+            }
+        }
+
+        return wishName;
     }
 
     ngOnDestroy(){

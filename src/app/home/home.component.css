@@ -64,13 +64,13 @@ h1, h2{
 
 #headers{
     display:grid;
-    grid-template-columns: 235px 265px auto;
+    grid-template-columns: 335px 165px auto;
     text-indent: 40px;
 }
 
 #link{
     position: absolute;
-    margin-left: 235px;
+    margin-left: 335px;
     margin-top: -15px;
     text-align: center;
 }

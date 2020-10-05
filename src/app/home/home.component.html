@@ -105,7 +105,7 @@
             <a [routerLink]="['/chat', guest, wishmaker]">Chatten er aktiv. Deltag i den</a> 
          </div>
       </div>
-      <div>
+      <div *ngIf="this.auth.adminLoggedIn()">
          <input autocomplete="off" [value]="email" #mail placeholder="Hvad er din email?"><button (click)="sendMail(mail.value)">Send ønskelisten til mail</button>
       </div>
    </div>

@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "wishlist-44e2c"
+  },
+  "targets": {
+    "wishlist-44e2c": {
+      "hosting": {
+        "wishlist": [
+          "wishlist-44e2c"
+        ]
+      }
+    }
   }
 }

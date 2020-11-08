@@ -9,7 +9,7 @@
         "@schematics/angular:component": {
           "style": "sass"
         }
-      }, 
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -30,8 +30,7 @@
             "styles": [
               "src/styles.sass"
             ],
-            "scripts": [
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -123,8 +122,13 @@
               "devServerTarget": "wishlist:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "wishlist"
 }

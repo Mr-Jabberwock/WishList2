@@ -44,14 +44,13 @@ export class WishmakerComponent implements OnInit, OnDestroy{
             let wishmaker = param.get("wishmaker");
             this.wishmaker = wishmaker;
         })
-
-        console.log(this.guest);
         
         this.subscription = this.service.getData("Wishmakers")
         .subscribe(wishmakers => {
             this.wishmakers = Object.values(wishmakers);
 
             this.object1 = Object.values(wishmakers);
+
             for(var i = 0; i < this.object1.length; i++){
                this.wishmakers[i] = Object.values(Object.values(this.object1)[i])[0];
                this.passarray[i] = Object.values(Object.values(this.object1)[i])[0];

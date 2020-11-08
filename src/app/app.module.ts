@@ -1,7 +1,9 @@
+import { AngularFireStorage } from '@angular/fire/storage';
 import { EmailService } from './services/email.service';
 import { HeaderComponent } from './users/header/header.component';
 import { AuthService } from './services/auth.service';
 import { RoutingService } from './services/routing.service';
+import { FileUploadService} from './services/fileupload.service'
 import { environment } from './../environments/environment';
 import { GuestComponent } from './guest/guest.component';
 import { RouterModule, CanActivate } from '@angular/router';
@@ -13,8 +15,11 @@ import { NgModule } from '@angular/core';
 import { AngularFireModule } from "angularfire2";
 import { AngularFireDatabaseModule } from "angularfire2/database";
 import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule }   from '@angular/forms';
+import {ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -51,18 +56,23 @@ import { JwtModule } from '@auth0/angular-jwt';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    FormsModule
+    AngularFireAnalyticsModule,
+    AngularFirestoreModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
      RoutingService,
      AuthService,
      DataService,
      EmailService,
+     FileUploadService,
      AuthGuard,
      UserGuard,
      GuestGuard,
      AccessGuard,
-     HeaderComponent
+     HeaderComponent,
+     AngularFireStorage
      //EmailService
   ],
   bootstrap: [AppComponent]

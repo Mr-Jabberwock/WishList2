@@ -64,27 +64,34 @@ h1, h2{
 
 #headers{
     display:grid;
-    grid-template-columns: 335px 165px auto;
+    grid-template-columns: 235px 165px auto auto;
     text-indent: 40px;
 }
 
 #link{
     position: absolute;
-    margin-left: 335px;
+    margin-left: 237px;
+    margin-top: -15px;
+    text-align: center;
+}
+
+#picLink{
+    position: absolute;
+    margin-left: 400px;
     margin-top: -15px;
     text-align: center;
 }
 
 #reservation{
     position: absolute;
-    margin-left: 500px;
+    margin-left: 555px;
     margin-top: -15px;
     text-align: center;
 }
 
 #deleteWish{
     position: absolute;
-    margin-left: 575px;
+    margin-left: 635px;
     margin-top: -15px;
     text-align: center;
 }

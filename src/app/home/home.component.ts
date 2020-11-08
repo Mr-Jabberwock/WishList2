@@ -1,11 +1,15 @@
 import { EmailService } from './../services/email.service';
-import {Component, OnInit, OnDestroy} from "@angular/core";
+import {Component, OnInit, OnDestroy, Inject} from "@angular/core";
 import { ActivatedRoute, Router } from '@angular/router';
 import {AngularFireDatabase, AngularFireList} from "angularfire2/database"
+import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { DataService } from '../services/data.service';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { stringify } from 'querystring';
+import {FileUploadService} from '../services/fileupload.service'
+import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: "home",
@@ -14,6 +18,10 @@ import { stringify } from 'querystring';
 })
 
 export class HomeComponent implements OnInit, OnDestroy{
+    selectedImage: any = null;
+    url:string;
+    id: string;
+    file:string;  
 
     wishmaker;
     guest;
@@ -25,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     list$: Observable<any[]>;
     list2$: Observable<any[]>;
     newWish;
+    base64textString = [];
 
     wishStatusVissible;
     interests$;
@@ -36,6 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     wish:string = "";
     link:string = "";
     interest:string = "";
+    image:File = null;
 
     viewMode = false;
     descriptionViewMode = false;
@@ -52,9 +62,13 @@ export class HomeComponent implements OnInit, OnDestroy{
         private route: ActivatedRoute, 
         public auth: AuthService,
         private db: AngularFireDatabase,
-        private router: Router){}
+        private fileUpload: FileUploadService,
+        private router: Router,
+        @Inject(AngularFireStorage) private storage: AngularFireStorage, 
+        @Inject(FileUploadService) private fileService: FileUploadService){}
 
     ngOnInit(){
+        this.fileService.getImageDetailList();
         this.subscription =  this.route.paramMap
         .subscribe(param =>{
             let wishmaker =  param.get('wishmaker');
@@ -66,12 +80,14 @@ export class HomeComponent implements OnInit, OnDestroy{
         
         //hent nøgleværdi for brugerinfo
         this.wishes$ = this.db.list("/Wishmakers/" + this.wishmaker).snapshotChanges();
+        console.log("/Wishmakers/" + this.wishmaker);
         this.subscription =  this.wishes$
         .subscribe(res=>{
             this.interests$ = this.db.list("/Wishmakers/" + this.wishmaker + "/" + res[0].key + "/Interests/").valueChanges()
             this.list$ = this.db.list("/Wishmakers/" + this.wishmaker + "/" + res[0].key + "/Wishes/").valueChanges()
             let data1 = res[0].key
             this.newWish = data1;
+            
             this.list$.subscribe(res =>{
                 var wishes = [];
                 for(var i = 0; i < res.length; i++){
@@ -95,20 +111,27 @@ export class HomeComponent implements OnInit, OnDestroy{
 
     }
 
-    addWish(wish: String, link: String, image: String){
-        //this.storeImage(image);
+    addWish(wish: String, link: String){
+
+        this.save();
+
+        console.log(wish);
+        console.log(link);
+
         var wishName = this.removeDots(wish);
         if(link.substr(0,4) != "http"){
             link = "no link";
         }
-        console.log("wishname" + wishName)
         var data = {
             Reserved: false,
             Reserver: "",
             Wish: wish,
             Link: link,
-            Description: "Beskrivelse"
+            Description: "Beskrivelse",
+            Image: " " + this.id
         }
+
+        console.log(this.id);
 
         this.subscription =  this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
         .subscribe(res=>{})
@@ -119,26 +142,28 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     reserved(wish){
-        var wishName = this.removeDots(wish[4]);
+        var wishName = this.removeDots(wish[5]);
 
-        if(wish[2] == false){
+        if(wish[3] == false){
             let data = {
                 Reserved: true,
                 Reserver: this.guest,
-                Wish: wish[4],
-                Link: wish[1],
-                Description: wish[0]
+                Wish: wish[5],
+                Link: wish[2],
+                Description: wish[0],
+                Image: wish[1]
             }
             this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
             .subscribe(res=>{}) 
         }else{
-            if(wish[3] == this.guest){
+            if(wish[4] == this.guest){
                 let data = {
                     Reserved: false,
                     Reserver: "",
-                    Wish: wish[4],
-                    Link: wish[1],
-                    Description: wish[0]
+                    Wish: wish[5],
+                    Link: wish[2],
+                    Description: wish[0],
+                    Image: wish[1]
 
                 }
                 this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
@@ -152,10 +177,8 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     deleteWish(wish){
-        var wishName = this.removeDots(wish[4]);
+        var wishName = this.removeDots(wish[5]);
         console.log(wishName)
-        console.log("Wishmakers", this.wishmaker + "/" + 
-        this.newWish + "/Wishes/" + wishName)
 
         this.subscription = this.service.deleteData("Wishmakers", this.wishmaker + "/" + 
         this.newWish + "/Wishes/" + wishName)
@@ -187,18 +210,21 @@ export class HomeComponent implements OnInit, OnDestroy{
 
     editText(newText, wish){
         
-        this.currentWish = wish[4];
+        this.currentWish = wish[5];
         var wishName = this.removeDots(newText);
+
+        console.log(this.currentWish, newText)
 
         if(this.viewMode == false){
             this.viewMode = true
         }else if (this.viewMode == true && newText != ""){
             let data = {
-                Reserved: wish[2],
+                Reserved: wish[3],
                 Reserver: this.guest,
                 Wish: newText,
-                Link: wish[1],
-                Description: wish[0]
+                Link: wish[2],
+                Description: wish[0],
+                Image: wish[1]
             }
             this.deleteWish(wish);
             console.log("Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wishName)
@@ -211,7 +237,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
 
     showDescription(wish){
-        this.currentDescription = wish[4];
+        this.currentDescription = wish[5];
         this.descriptionViewMode = !this.descriptionViewMode;
     }
     viewDescriptionField(wish){
@@ -222,13 +248,14 @@ export class HomeComponent implements OnInit, OnDestroy{
         if(this.desTxtVM == true){
             
             let data = {
-                Reserved: wish[2],
+                Reserved: wish[3],
                 Reserver: this.guest,
-                Wish: wish[4],
-                Link: wish[1],
-                Description: newText
+                Wish: wish[5],
+                Link: wish[2],
+                Description: newText,
+                Image: wish[1]
             }
-            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[4])
+            this.subscription = this.service.setData(data, "Wishmakers/" + this.wishmaker, this.newWish+"/Wishes/"+wish[5])
             .subscribe(res=>{})
         }
         
@@ -240,9 +267,10 @@ export class HomeComponent implements OnInit, OnDestroy{
         this.linkViewMode = !this.linkViewMode;
     }
 
-    storeImage(file){
-        console.log(file);
-
+    storeImage(files: FileList){
+        this.image = files.item(0);
+        
+        return this.image;
     }
 
     removeDots(wish){
@@ -257,6 +285,33 @@ export class HomeComponent implements OnInit, OnDestroy{
         }
 
         return wishName;
+    }
+
+    showPreview(event: any) {
+        this.selectedImage = event.target.files[0];
+    }
+
+    save() {
+       
+        if(this.selectedImage != null){
+        var name = this.selectedImage.name;
+        this.id = this.removeDots(name);
+        const fileRef = this.storage.ref(name);
+        this.storage.upload(name, this.selectedImage).snapshotChanges().pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe((url) => {
+              this.url = url;
+              this.fileService.insertImageDetails(this.id, this.url);
+              console.log("upload succesful")
+            })
+          })
+        ).subscribe();
+        }
+    }
+
+    view(file: string){
+
+       this.fileService.getImage(file.substring(1, file.length));
     }
 
     ngOnDestroy(){
